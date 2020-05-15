@@ -1,24 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react'
+import './App.css'
+import Task from './models/Task'
+import TodoList from './components/TodoList'
+import NewTodo from './components/NewTodo'
 
-function App() {
+interface Props {
+
+}
+
+const App:React.FC<Props> = (props) => {
+
+    const [tasks, setTasks] = useState<Task[]>([
+        {
+            id: '1',
+            text: 'Task 1'
+        },
+        {
+            id: '2',
+            text: 'Task 2'
+        },
+        {
+            id: '3',
+            text: 'Task 3'
+        }
+    ])
+
+    const taskAddHandler = (newTask: Task) => {
+        setTasks(prevTasks => {
+            const newTasks = [
+                ...prevTasks,
+                newTask
+            ]
+            return newTasks
+        })
+    }
+
+    const taskDeleteHandler = (taskToBeDeleted: Task) => {
+        setTasks(prevTasks => prevTasks.filter(task => task.id !== taskToBeDeleted.id))
+    }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <NewTodo onAddTask={taskAddHandler}></NewTodo>
+        <TodoList tasks={tasks} onDeleteTask={taskDeleteHandler}></TodoList>
     </div>
   );
 }
